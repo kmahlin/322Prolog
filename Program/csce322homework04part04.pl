@@ -1,0 +1,1 @@
+notStacked(Maze,Move).

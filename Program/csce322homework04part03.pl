@@ -1,0 +1,1 @@
+fewestRotationsMultiple(Maze,[180,180,180]).

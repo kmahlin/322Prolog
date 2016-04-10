@@ -1,0 +1,1 @@
+rotationsAndPlayers(Rotations,Maze).
