@@ -22,3 +22,12 @@ printMazeGame([]).
 printMazeGame([Row|Rows]):-
     writeln(Row),
     printMazeGame(Rows).
+
+
+
+countRotations([],Return).
+countRotations([HE|TA]],Return):-
+	0 is mod(HE,2)
+
+
+sumRotation
