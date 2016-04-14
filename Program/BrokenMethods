@@ -1,0 +1,21 @@
+countPlayersInMaze([],_):- !.
+countPlayersInMaze([Row|Rows],R):-
+  countPlayersInRow(Row,R2),
+  countPlayersInMaze(Rows,R3),
+  R is R2.
+
+
+
+// flatten isn't broken, I'm just using builtin flatten for now
+
+  flatten2(List, FlatList) :-
+  	flatten2(List, [], FlatList).
+
+  flatten2(Var, T, [Var|T]) :-
+  	var(Var), !.
+  flatten2([], T, T) :- !.
+  flatten2([H|T], TailList, List) :- !,
+  	flatten2(H, FlatTail, List),
+  	flatten2(T, TailList, FlatTail).
+
+  flatten2(NonList, T, [NonList|T]).
