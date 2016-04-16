@@ -19,3 +19,18 @@ countPlayersInMaze([Row|Rows],R):-
   	flatten2(T, TailList, FlatTail).
 
   flatten2(NonList, T, [NonList|T]).
+
+
+
+
+  doRotation(Move,Maze,R):-
+    (Move == c,
+    rotateClockWise(Maze,R));
+
+    (Move == cc,
+    rotateCounterClockWise(Maze,R));
+
+    (Move == 180,
+    rotateOneEighty(Maze,R));
+
+    doRotation(Move,Maze,R).
