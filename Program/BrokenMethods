@@ -34,3 +34,15 @@ countPlayersInMaze([Row|Rows],R):-
     rotateOneEighty(Maze,R));
 
     doRotation(Move,Maze,R).
+
+
+
+    movePlayer([],_).
+    %Move player
+    movePlayer([HE|TA],Return):-
+      not(player(HE)),
+      movePlayer(TA,Return).
+
+    movePlayer([HE,MI|TA],Return):-
+      forward(MI),
+      movePlayer([MI,HE|TA],Return).
