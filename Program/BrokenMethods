@@ -46,3 +46,19 @@ countPlayersInMaze([Row|Rows],R):-
     movePlayer([HE,MI|TA],Return):-
       forward(MI),
       movePlayer([MI,HE|TA],Return).
+
+
+
+% never worked, used bubble sort instead.
+movePlayer([],_):- !.
+movePlayer([He|Ta],Result):-
+  not(He is 1),
+  movePlayer(Ta,Result),
+  !.
+movePlayer([He|Ta],Result):-
+    swap([He|Ta],R1),
+    movePlayer(R1,Result),
+    !.
+
+swap([],[]).
+swap([He,Mi|Ta],[Mi,He|Ta]):- !.

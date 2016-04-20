@@ -30,7 +30,6 @@ edge(c,180).
 edge(cc,180).
 edge(180,180).
 
-
 move(c).
 move(cc).
 move(180).
@@ -41,17 +40,6 @@ goal(g).
 player(1).
 
 fewestRotationsSingle(Maze,[180,180,180]).
-% use this
-% bfSearch(Move, Move,List).
-
-% bfSearch(From,To,Path).
-% bfSearch(From,From,[From]).
-% bfSearch(From,To,[From|Result]):-
-%     length(Result,ResultLength),
-%     % writeln(ResultLength),
-%     ResultLength =< 6,
-%     edge(From,Anything),
-%     bfSearch(Anything,To,Result).
 
 
 bfSearch(From,From,[From]).
@@ -63,74 +51,42 @@ bfSearch(From,To,[From|Result]):-
     % do the rotation and move
     bfSearch(Anything,To,Result).
 
-%All Rotations
 
-%RotateMaze
-% rotateAndMove([],_,_).
-% rotateAndMove([Hm|Tm],Maze,)
-% movePlayer([],[]).
-% movePlayer([Ta],[Ta]).
-% movePlayer([He,Mi|Ta],Result):-
-%   movePlayer(Ta,[He|TA]).
 
-movePlayer([],_):- !.
-movePlayer([He|Ta],Result):-
-  not(He is 1),
-  movePlayer(Ta,Result),
+% left off here. Not sure how to move through list of lists
+% movePlayer([Row|Rows],R):-
+%   % modify the Row
+%   movePlayerInRow(Row,Swapped),
+%   movePlayer(Rows,Swapped),
+%   R is Swapped.
+% movePlayer(R,R).
+movePlayer([],[]).
+movePlayer([Row|Rows],R):-
+  movePlayerInRow(Row,NewR),
+  List = [NewR],
+  movePlayer(Rows,NewRs),
+  append(List,NewRs,R),
   !.
-movePlayer([He|Ta],Result):-
-    swap([He|Ta],R1),
-    movePlayer(R1,Result),
+movePlayer(R,R).
+
+
+movePlayerInRow(Row,R):-
+    swapHeadMiddle(Row,SwappedRow),
+    !,
+    movePlayerInRow(SwappedRow,R).
+movePlayerInRow(Row,Row).
+
+swapHeadMiddle([He,Mi|R],[-,He|R]):-
+    player(He),
+    goal(Mi),
     !.
-
-% dropHead([He|Ta],Ta).
-
-
-bubblesort(List,SortedList):-
-    swap1(List,List1),
-    ! ,
-    bubblesort(List1,SortedList).
-bubblesort(List,List).
-
-
-swap1([X,Y|Rest],[-,X|Rest]):-
-    X is 1,
-    goal(Y),
+swapHeadMiddle([He,Mi|R],[Mi,He|R]):-
+    player(He),
+    forward(Mi),
     !.
+swapHeadMiddle([He|R],[He|R1]):-
+    swapHeadMiddle(R,R1).
 
-swap1([X,Y|Rest],[Y,X|Rest]):-
-    X is 1,
-    forward(Y),
-    !.
-
-
-    % X > Y, !.
-swap1([Z|Rest],[Z|Rest1]):-
-    swap1(Rest,Rest1).
-
-
-
-
-swap([],[]).
-swap([He,Mi|Ta],[Mi,He|Ta]):- !.
-  %  swap(Ta,Ra).
-% swap([He|Ta],Result):-
-%   swap(Ta,Result).
-
-
-
-
-
-% movePlayer([HE,MI|TA],Result):-
-%   player(HE),
-%   forward(MI),
-%   movePlayer([HE|TA],Result),
-%   !.
-
-list_swappedcouples([],[]).
-list_swappedcouples([A],[A]).
-list_swappedcouples([A,B|Xs],[B,A|Ys]) :-
-   list_swappedcouples(Xs,Ys).
 
 
 
