@@ -38,6 +38,7 @@ forward(-).
 goal(g).
 
 player(1).
+player(2).
 
 fewestRotationsSingle(Maze,[180,180,180]).
 
