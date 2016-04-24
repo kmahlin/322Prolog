@@ -4,19 +4,8 @@
 % [helpers].
 % [csce322homework04part02].
 
-use_module(library(clpfd), []).
-
-% edge(move(c),move(c)).
-% edge(move(c),move(cc)).
-% edge(move(c),move(180)).
-%
-% edge(move(cc),move(c)).
-% edge(move(cc),move(cc)).
-% edge(move(cc),move(180)).
-%
-% edge(move(180),move(c)).
-% edge(move(180),move(cc)).
-% edge(move(180),move(180)).
+loadModule:-
+  use_module(library(clpfd), []).
 
 edge(c,c).
 edge(cc,c).
@@ -40,7 +29,10 @@ goal(g).
 player(1).
 player(2).
 
-fewestRotationsSingle(Maze,[180,180,180]).
+badRotation([180,180,180]).
+
+fewestRotationsSingle(Maze,[180,180,180]):-
+  loadModule.
 
 
 bfSearch(From,From,[From]).
@@ -49,34 +41,65 @@ bfSearch(From,To,[From|Result]):-
     % writeln(ResultLength),
     ResultLength =< 6,
     edge(From,Anything),
+
     % do the rotation and move
     bfSearch(Anything,To,Result).
 
 
+% use up rotation array
+processRotationList(Maze,[Hr|Tr], R):-
+  % rotate the maze based on head of ratation list
+  chooseRotation(Maze,Hr,RoMaze),
+  % rotate counter cc to make columns rows
+  chooseRotation(RoMaze,cc,CCMaze),
+  % move all playes
+  movePlayers(CCMaze,MoMaze),
+  % rotate c to get the maze correctly oriented
+  chooseRotation(MoMaze,c,CMaze),
+  % Check for goal
+  flatten(Maze,FlatMaze),
+  goalCheck(FlatMaze),
+  % process rest of rotation list
+  processRotationList(CMaze,Tr, R).
 
-% left off here. Not sure how to move through list of lists
-% movePlayer([Row|Rows],R):-
-%   % modify the Row
-%   movePlayerInRow(Row,Swapped),
-%   movePlayer(Rows,Swapped),
-%   R is Swapped.
-% movePlayer(R,R).
-movePlayer([],[]).
-movePlayer([Row|Rows],R):-
+%Goal no longer exists, we out.
+processRotationList(Maze,[], Maze):- !.
+
+
+
+processRotation(Maze,Rotation,R):-
+
+
+
+
+% does a goal exist in maze?
+goalCheck([He|_]):-
+  goal(He),
+  !.
+
+goalCheck([_|Ta]):-
+  goalCheck(Ta).
+
+
+
+% Move all players in a list of lists
+movePlayers([],[]).
+movePlayers([Row|Rows],R):-
   movePlayerInRow(Row,NewR),
   List = [NewR],
-  movePlayer(Rows,NewRs),
+  movePlayers(Rows,NewRs),
   append(List,NewRs,R),
   !.
-movePlayer(R,R).
+movePlayers(R,R).
 
-
+% Move all players in a row
 movePlayerInRow(Row,R):-
     swapHeadMiddle(Row,SwappedRow),
     !,
     movePlayerInRow(SwappedRow,R).
 movePlayerInRow(Row,Row).
 
+% Swap x and y if x is a player and y is a valid space
 swapHeadMiddle([He,Mi|R],[-,He|R]):-
     player(He),
     goal(Mi),
@@ -89,6 +112,17 @@ swapHeadMiddle([He|R],[He|R1]):-
     swapHeadMiddle(R,R1).
 
 
+chooseRotation(Maze,Rotation,RMaze):-
+  (Rotation == c,
+  rotateClockWise(Maze,RMaze),!);
+
+  (Rotation == cc,
+  rotateCounterClockWise(Maze,RMaze),!);
+
+  (Rotation == 180,
+  rotateOneEighty(Maze,RMaze),!).
+
+
 
 
 
@@ -96,6 +130,7 @@ swapHeadMiddle([He|R],[He|R1]):-
 rotateClockWise(Maze,R):-
   reverse(Maze,RMaze),
   clpfd:transpose(RMaze,R).
+  % transpose(RMaze,R).
 
 % rotate cc
 rotateCounterClockWise(Maze,R):-
