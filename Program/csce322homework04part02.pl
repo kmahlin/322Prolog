@@ -32,7 +32,7 @@ goal(g).
 player(1).
 player(2).
 
-unSolvable([180,180,180]).
+unSolvable(180,180,180).
 unSolvable([c,c,c,c]).
 unSolvable([cc,cc,cc,cc]).
 
@@ -59,28 +59,48 @@ depth([180,180,180,180,180,180]).
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 % bfSearch(From,To,Path).  <- use this to call it
 % Searches for a list of possible rotations
 bfSearch(From,From,[From]).
 bfSearch(From,To,[From|Result]):-
+
+
+
   length(Result,ResultLength),
-  % writeln(ResultLength),
-  edge(From,Anything),
-  not(unSolvable([From|Result])),
-  %  write([From|Result]),
-  bfSearch(Anything,To,Result).
+
+  ( ResultLength < 6 ->
+    % writeln(ResultLength),
+    edge(From,Anything),
+    %  write([From|Result]),
+    bfSearch(Anything,To,Result)
+
+    ;
+    !
+  ).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% % bfSearch(From,To,Path).  <- use this to call it
+% % Searches for a list of possible rotations
+% bfSearch(From,From,[From]).
+% bfSearch(From,To,[From|Result]):-
+%   length(Result,ResultLength),
+%   % writeln(ResultLength),
+%   edge(From,Anything),
+%   %  write([From|Result]),
+%   bfSearch(Anything,To,Result).
 
 
 
