@@ -7,17 +7,20 @@
 loadModule:-
   use_module(library(clpfd), []).
 
+
 edge(c,c).
-edge(cc,c).
-edge(180,c).
-
 edge(c,cc).
-edge(cc,cc).
-edge(180,cc).
-
 edge(c,180).
+
+edge(cc,c).
+edge(cc,cc).
 edge(cc,180).
+
+edge(180,c).
+edge(180,cc).
 edge(180,180).
+
+
 
 move(c).
 move(cc).
@@ -29,50 +32,98 @@ goal(g).
 player(1).
 player(2).
 
-badRotation([180,180,180]).
+unSolvable([180,180,180]).
+unSolvable([c,c,c,c]).
+unSolvable([cc,cc,cc,cc]).
 
 fewestRotationsSingle(Maze,[180,180,180]):-
   loadModule.
 
 
+possibleRotations(Maze,Rotation):-
+  % Do bfSearch
+  bfSearch(Move, Move,List).
+  % Take list and see if solvable
+
+  % findall(Path,(
+
+  % bfSearch(From,To,Path),length(Path,N), N<2
+
+  % ),X).
+
+  % Collect list of possible solved mazes
+
+
+
+depth([180,180,180,180,180,180]).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% bfSearch(From,To,Path).  <- use this to call it
+% Searches for a list of possible rotations
 bfSearch(From,From,[From]).
 bfSearch(From,To,[From|Result]):-
-    length(Result,ResultLength),
-    % writeln(ResultLength),
-    ResultLength =< 6,
-    edge(From,Anything),
+  length(Result,ResultLength),
+  % writeln(ResultLength),
+  edge(From,Anything),
+  not(unSolvable([From|Result])),
+  %  write([From|Result]),
+  bfSearch(Anything,To,Result).
 
-    % do the rotation and move
-    bfSearch(Anything,To,Result).
+
+
+
+% Solve the Maze?
+solvable(Maze,RList):-
+  %something for keeping out 180 180 180
+  not(unSolvable(RList)),
+  %Process Rotation list
+  processRotationList(Maze,RList,R),
+  % Check for goal
+  not(goalExists(R)).
 
 
 % use up rotation array
 processRotationList(Maze,[Hr|Tr], R):-
-  % rotate the maze based on head of ratation list
-  chooseRotation(Maze,Hr,RoMaze),
-  % rotate counter cc to make columns rows
-  chooseRotation(RoMaze,cc,CCMaze),
-  % move all playes
-  movePlayers(CCMaze,MoMaze),
-  % rotate c to get the maze correctly oriented
-  chooseRotation(MoMaze,c,CMaze),
-  % Check for goal
-  flatten(Maze,FlatMaze),
-  goalCheck(FlatMaze),
+  processRotation(Maze,Hr,ProcMaze),
+  goalExists(Maze),
   % process rest of rotation list
-  processRotationList(CMaze,Tr, R).
+  processRotationList(ProcMaze,Tr, R),
+  !.
 
 %Goal no longer exists, we out.
 processRotationList(Maze,[], Maze):- !.
 
 
-
 processRotation(Maze,Rotation,R):-
-
+  % rotate the maze based on head of ratation list
+  chooseRotation(Maze,Rotation,RoMaze),
+  % rotate counter cc to make columns rows
+  chooseRotation(RoMaze,cc,CCMaze),
+  % move all playes
+  movePlayers(CCMaze,MoMaze),
+  % rotate c to get the maze correctly oriented
+  chooseRotation(MoMaze,c,R).
 
 
 
 % does a goal exist in maze?
+goalExists(Maze):-
+  flatten(Maze,FlatMaze),
+  goalCheck(FlatMaze).
+
 goalCheck([He|_]):-
   goal(He),
   !.
