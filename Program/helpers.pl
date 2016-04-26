@@ -8,6 +8,7 @@
 	 , loadModule/0
 	 , removeEndOfFile/2
 	 , solvedPaths/2
+	 ,shortestSolvedPaths/2
 
 	 ,isStacked/2
 	 ]
@@ -127,6 +128,24 @@ bfSearch(From,To,[From|Result]):-
     ;
     !
   ).
+
+
+shortestSolvedPaths(Maze,R):-
+	solvedPaths(Maze,[Path|Paths]),
+	length(Path,ShortestPathLenght),
+	findAllPathsOfLength([Path|Paths],ShortestPathLenght,R).
+
+
+% sort through all solved paths and find the all of length len
+findAllPathsOfLength([],_,_).
+findAllPathsOfLength([Path|Paths],Len,R):-
+	length(Path,PathLength),
+	PathLength == Len,
+	R = Path,
+	findAllPathsOfLength(Paths,Len,R),!.
+
+findAllPathsOfLength([_|Paths],Len,R):-
+	findAllPathsOfLength(Paths,Len,R).
 
 
 % get all paths from BFS serach, and return a list of
