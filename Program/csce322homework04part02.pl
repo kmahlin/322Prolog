@@ -32,7 +32,7 @@ goal(g).
 player(1).
 player(2).
 
-unSolvable(180,180,180).
+unSolvable([180,180,180]).
 unSolvable([c,c,c,c]).
 unSolvable([cc,cc,cc,cc]).
 
@@ -40,91 +40,145 @@ fewestRotationsSingle(Maze,[180,180,180]):-
   loadModule.
 
 
-possibleRotations(Maze,Rotation):-
+
+  % collect all sol for bfsearch
+  % findall(Path,bfSearch(From,To,Path),X) ; true.
+
+  % bfSearch(From,To,Path).  <- use this to call it
+  % Searches for a list of possible rotations
+  bfSearch(From,From,[From]).
+  bfSearch(From,To,[From|Result]):-
+    length(Result,ResultLength),
+
+    ( ResultLength < 6 ->
+      % writeln(ResultLength),
+      edge(From,Anything),
+      %  write([From|Result]),
+      bfSearch(Anything,To,Result)
+      ;
+      !
+    ).
+
+
+
+
+
+
+
+solvedPaths(Maze,R):-
   % Do bfSearch
-  bfSearch(Move, Move,List).
-  % Take list and see if solvable
+  bfSearch(From, To,BFSList),
 
-  % findall(Path,(
+  % Find all palths
+  processBFSLists(Maze,BFSList,R).
 
-  % bfSearch(From,To,Path),length(Path,N), N<2
 
-  % ),X).
+  % findall(
+  %   SolvablePaths,
+  %   % Take list and see if solvable
+  %   processBFSLists(Maze,BFSList,SolvablePaths),
+  %   R
+  % ).
 
   % Collect list of possible solved mazes
 
 
 
-depth([180,180,180,180,180,180]).
-
-
-
-% bfSearch(From,To,Path).  <- use this to call it
-% Searches for a list of possible rotations
-bfSearch(From,From,[From]).
-bfSearch(From,To,[From|Result]):-
-
-
-
-  length(Result,ResultLength),
-
-  ( ResultLength < 6 ->
-    % writeln(ResultLength),
-    edge(From,Anything),
-    %  write([From|Result]),
-    bfSearch(Anything,To,Result)
-
-    ;
-    !
-  ).
 
 
 
 
+  % Move all players in a list of lists
+  % movePlayers([],[]).
+  % movePlayers([Row|Rows],R):-
+  %   movePlayerInRow(Row,NewR),
+  %   List = [NewR],
+  %   movePlayers(Rows,NewRs),
+  %   append(List,NewRs,R),
+  %   !.
+  % movePlayers(R,R).
+
+
+
+
+% processBFSLists(_,[],_).
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   solvable(Maze,Rlist),
+%   List = [Rlist],
+%   processBFSLists(Maze,Rlists,NewLists),
+%   append(List,NewLists,R),
+%   !.
+  % processBFSLists(_,[Rlist|Rlists],Rlists).
+% processBFSLists(_,[Rlist|Rlists],Rlists).
+
+% processBFSLists(_,[],[]).
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   % solveable?
+%   solvable(Maze,Rlist),
+%   %Process rest of list
+%   processBFSLists(Maze,Rlists,R2),
+%   append([Rlist],[R2],R).
+% processBFSLists(Maze,[_|Rlists],R):-
+%   processBFSLists(Maze,Rlists,R).
+
+% does too many nested lists
+% processBFSLists(_,[],[]).
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   % solveable?
+%   not(solvable(Maze,Rlist)),
+%   %Process rest of list
+%   processBFSLists(Maze,Rlists,R),!.
+%
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   processBFSLists(Maze,Rlists,R2),
+%   append([Rlist],[R2],R).
+
+
+
+processBFSLists(_,[],[]).
+processBFSLists(Maze,[Rlist|Rlists],R):-
+  % solveable?
+  not(solvable(Maze,Rlist)),
+  %Process rest of list
+  processBFSLists(Maze,Rlists,R),!.
+
+processBFSLists(Maze,[Rlist|Rlists],R):-
+  processBFSLists(Maze,Rlists,R2),
+  append([Rlist],R2,R).
 
 
 
 
 
 
-
-
-
-
-
-% % bfSearch(From,To,Path).  <- use this to call it
-% % Searches for a list of possible rotations
-% bfSearch(From,From,[From]).
-% bfSearch(From,To,[From|Result]):-
-%   length(Result,ResultLength),
-%   % writeln(ResultLength),
-%   edge(From,Anything),
-%   %  write([From|Result]),
-%   bfSearch(Anything,To,Result).
-
-
-
-
-% Solve the Maze?
+% this just checks if a single list of rotations
+% Solve the Maze
+% I need to return a list if it works
 solvable(Maze,RList):-
   %something for keeping out 180 180 180
   not(unSolvable(RList)),
   %Process Rotation list
-  processRotationList(Maze,RList,R),
+  processRotationList(Maze,RList,RMaze),
   % Check for goal
-  not(goalExists(R)).
+  not(goalExists(RMaze)).
 
 
 % use up rotation array
+% return the rotated maze
+%Goal no longer exists, we out.
 processRotationList(Maze,[Hr|Tr], R):-
+  % do one rotation
   processRotation(Maze,Hr,ProcMaze),
+  % check if goal still exists
   goalExists(Maze),
-  % process rest of rotation list
+  % if it does, process the rest of the list
   processRotationList(ProcMaze,Tr, R),
   !.
 
+processRotationList(Maze,_, Maze):- !.
+
 %Goal no longer exists, we out.
-processRotationList(Maze,[], Maze):- !.
+% processRotationList(Maze,[], Maze):- !.
 
 
 processRotation(Maze,Rotation,R):-
