@@ -36,10 +36,23 @@ unSolvable([180,180,180]).
 unSolvable([c,c,c,c]).
 unSolvable([cc,cc,cc,cc]).
 
+endOfFile(end_of_file).
+
 fewestRotationsSingle(Maze,R):-
   loadModule,
-  solvedPaths(Maze,R).
+  removeEndOfFile(Maze,ModMaze),
+  solvedPaths(ModMaze,R).
 
+
+
+% remove end of file from maze
+removeEndOfFile(Maze,R):-
+  reverse(Maze,[H|RMazeTail]),
+  endOfFile(H),
+  reverse(RMazeTail,CorrectedMaze),
+  R = CorrectedMaze,
+  !.
+removeEndOfFile(Maze,Maze).
 
 
   % collect all sol for bfsearch

@@ -10,6 +10,12 @@ loadHelpers:-
     ['csce322homework04part03'],
     ['csce322homework04part04'].
 
+
+test:-
+  readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part01test01.g',Rotations,Maze),
+  writeln(aaaaaaaa),
+  removeEndOfFile(Maze,R).
+
 part01:-
     readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part01test01.g',Rotations,Maze),
     writeln(rotations),
