@@ -1,13 +1,6 @@
 :- module( helpers,
 	 [ readGravityMazeFile/3
 	 , printMazeGame/1
-	 , player/1
-	 , move/1
-	 , edge/2
-	 , forward/1
-	 , goal/1
-	 , unSolvable/1
-	 , endOfFile/1
 
 	 ,countMovesInList/2
 	 ,countPlayerInMaze/2

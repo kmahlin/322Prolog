@@ -1,1 +1,6 @@
-fewestRotationsMultiple(Maze,[180,180,180]).
+
+
+fewestRotationsMultiple(Maze,R):-
+  loadModule,
+  removeEndOfFile(Maze,ModMaze),
+  solvedPaths(ModMaze,R).
