@@ -1,3 +1,29 @@
+
+
+
+
+%Not broken, just storing here
+
+% % bfSearch(From,To,Path).  <- use this to call it
+% % Searches for a list of possible rotations
+% bfSearch(From,From,[From]).
+% bfSearch(From,To,[From|Result]):-
+%   length(Result,ResultLength),
+%   % writeln(ResultLength),
+%   edge(From,Anything),
+%   %  write([From|Result]),
+%   bfSearch(Anything,To,Result).
+
+
+
+
+
+
+
+
+
+
+
 countPlayersInMaze([],_):- !.
 countPlayersInMaze([Row|Rows],R):-
   countPlayersInRow(Row,R2),
