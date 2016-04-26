@@ -4,9 +4,6 @@
 % [helpers].
 % [csce322homework04part02].
 
-loadModule:-
-  use_module(library(clpfd), []).
-
 
 edge(c,c).
 edge(c,cc).
@@ -20,8 +17,6 @@ edge(180,c).
 edge(180,cc).
 edge(180,180).
 
-
-
 move(c).
 move(cc).
 move(180).
@@ -32,9 +27,16 @@ goal(g).
 player(1).
 player(2).
 
+loadModule:-
+  use_module(library(clpfd), []).
+
 unSolvable([180,180,180]).
-unSolvable([c,c,c,c]).
-unSolvable([cc,cc,cc,cc]).
+unSolvable([180,180,180,180]).
+unSolvable([180,180,180,180,180]).
+unSolvable([180,180,180,180,180,180]).
+% TODO will these work?
+% unSolvable([c,c,c,c]).
+% unSolvable([cc,cc,cc,cc]).
 
 endOfFile(end_of_file).
 
@@ -44,8 +46,7 @@ fewestRotationsSingle(Maze,R):-
   solvedPaths(ModMaze,R).
 
 
-
-% remove end of file from maze
+% remove 'end of file' from maze
 removeEndOfFile(Maze,R):-
   reverse(Maze,[H|RMazeTail]),
   endOfFile(H),
@@ -55,7 +56,7 @@ removeEndOfFile(Maze,R):-
 removeEndOfFile(Maze,Maze).
 
 
-  % collect all sol for bfsearch
+  % NOTE: collect all sol for bfsearch
   % findall(Path,bfSearch(From,To,Path),X) ; true.
 
   % bfSearch(From,To,Path).  <- use this to call it
@@ -74,9 +75,8 @@ removeEndOfFile(Maze,Maze).
     ).
 
 
-% Just a save
-% solvedPaths([[x,x,x,x,x,x],[x,-,g,-,-,x],[x,-,-,-,-,x],[x,-,-,-,1,x],[x,-,-,-,-,x],[x,-,-,-,-,x],[x,-,-,-,x,x],[x,x,x,x,x,x]],R) ; true.
-
+% get all paths from BFS serach, and return a list of
+% paths that solve the maze
 solvedPaths(Maze,R):-
   % Do bfSearch
   % bfSearch(From, To,BFSList),
@@ -85,26 +85,8 @@ solvedPaths(Maze,R):-
   processBFSLists(Maze,AllPaths,R).
 
 
-  % findall(
-  %   SolvablePaths,
-  %   % Take list and see if solvable
-  %   processBFSLists(Maze,BFSList,SolvablePaths),
-  %   R
-  % ).
-
-  % Collect list of possible solved mazes
-
-  % movePlayers([],[]).
-  % movePlayers([Row|Rows],R):-
-  %   movePlayerInRow(Row,NewR),
-  %   List = [NewR],
-  %   movePlayers(Rows,NewRs),
-  %   append(List,NewRs,R),
-  %   !.
-  % movePlayers(R,R).
-
-
-
+% Process each path to see if it solves the maze
+% retrun a list of solved paths.
 processBFSLists(_,[],[]).
 processBFSLists(Maze,[Rlist|Rlists],R):-
   (
@@ -118,25 +100,10 @@ processBFSLists(Maze,[Rlist|Rlists],R):-
   ).
 
 
-% processBFSLists(_,[],[]).
-% processBFSLists(Maze,[Rlist|Rlists],R):-
-%   % solveable?
-%   not(solvable(Maze,Rlist)),
-%   %Process rest of list
-%   processBFSLists(Maze,Rlists,R),!.
-%
-% processBFSLists(Maze,[Rlist|Rlists],R):-
-%   processBFSLists(Maze,Rlists,R2),
-%   append(Rlist,R2,R).
-
-
-
-
 
 
 % this just checks if a single list of rotations
 % Solve the Maze
-% I need to return a list if it works
 solvable(Maze,RList):-
   %something for keeping out 180 180 180
   not(unSolvable(RList)),
@@ -146,9 +113,8 @@ solvable(Maze,RList):-
   not(goalExists(RMaze)).
 
 
-% use up rotation array
+% use up rotation list
 % return the rotated maze
-%Goal no longer exists, we out.
 processRotationList(Maze,[Hr|Tr], R):-
   % do one rotation
   processRotation(Maze,Hr,ProcMaze),
@@ -158,12 +124,14 @@ processRotationList(Maze,[Hr|Tr], R):-
   processRotationList(ProcMaze,Tr, R),
   !.
 
+%Goal no longer exists, we out.
 processRotationList(Maze,_, Maze):- !.
 
-%Goal no longer exists, we out.
-% processRotationList(Maze,[], Maze):- !.
 
-
+% 1)This predicate, rotates the maze
+% 2)then rotates the maze CC in order to turn Cols into rows
+% 3)moves the payers forward
+% 4)then rotates the maze c to properly orient the maze
 processRotation(Maze,Rotation,R):-
   % rotate the maze based on head of ratation list
   chooseRotation(Maze,Rotation,RoMaze),
@@ -187,7 +155,6 @@ goalCheck([He|_]):-
 
 goalCheck([_|Ta]):-
   goalCheck(Ta).
-
 
 
 % Move all players in a list of lists
@@ -220,6 +187,7 @@ swapHeadMiddle([He|R],[He|R1]):-
     swapHeadMiddle(R,R1).
 
 
+% rotate the maze based on move() choice
 chooseRotation(Maze,Rotation,RMaze):-
   (Rotation == c,
   rotateClockWise(Maze,RMaze),!);
@@ -229,9 +197,6 @@ chooseRotation(Maze,Rotation,RMaze):-
 
   (Rotation == 180,
   rotateOneEighty(Maze,RMaze),!).
-
-
-
 
 
 % rotate c
