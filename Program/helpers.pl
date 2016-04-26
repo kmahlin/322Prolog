@@ -9,7 +9,7 @@
 	 , removeEndOfFile/2
 	 , solvedPaths/2
 
-
+	 ,isStacked/2
 	 ]
     ).
 
@@ -65,7 +65,7 @@ unSolvable([180,180,180,180,180]).
 unSolvable([180,180,180,180,180,180]).
 
 
-% part 1 methods
+% part 1 predicates
 countMovesInList([],0):- !.
 countMovesInList([HE|TA],R):-
   not(move(HE)),
@@ -94,7 +94,7 @@ countPlayersInList([_|TA],R):-
 
 
 
-% part 02 methods
+% part 02 03 predicates
 
 loadModule:-
   use_module(library(clpfd), []).
@@ -182,7 +182,7 @@ processRotationList(Maze,[Hr|Tr], R):-
 processRotationList(Maze,_, Maze):- !.
 
 
-% 1)This predicate, rotates the maze
+% 1)This predicate rotates the maze
 % 2)then rotates the maze CC in order to turn Cols into rows
 % 3)moves the payers forward
 % 4)then rotates the maze c to properly orient the maze
@@ -268,3 +268,25 @@ rotateCounterClockWise(Maze,R):-
 rotateOneEighty(Maze,R):-
   rotateClockWise(Maze,R1),
   rotateClockWise(R1,R).
+
+
+% % part 04 specific predicates
+% % also uses part 02/3 predicates for rotation and Moves
+isStacked(Maze,RotationList):-
+	% do all rotations in move
+	processRotationList(Maze,RotationList,RMaze),
+	stackExists(R).
+
+
+
+%Check if a stack of players exist in the maze
+stackExists(Maze):-
+	flatten(Maze,FlatMaze),
+  stackedCheck(FlatMaze).
+
+stackedCheck([He,Mi|_]):-
+	player(He),
+	player(Mi),
+	!.
+stackedCheck([_|Ta]):-
+	stackedCheck(Ta).

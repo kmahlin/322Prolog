@@ -1,4 +1,22 @@
-
+%
+% % need to check stack on each rotation. blah
+%
+% % use up rotation list
+% % return the rotated maze
+% % Checks, after each rotation/move if players are stacked
+% processRotationListPart04(Maze,[Hr|Tr], R):-
+%   % do one rotation
+%   processRotation(Maze,Hr,ProcMaze),
+% 	% Check if players are stacked
+% 	not(stackExists(Maze)),
+%   % check if goal still exists
+%   goalExists(Maze),
+%   % if it does, process the rest of the list
+%   processRotationList(ProcMaze,Tr, R),
+%   !.
+%
+% %Goal no longer exists, we out.
+% processRotationListPart04(Maze,_, Maze):- !.
 
 
 
