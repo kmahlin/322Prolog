@@ -61,6 +61,9 @@ fewestRotationsSingle(Maze,R):-
     ).
 
 
+% Just a save
+% solvedPaths([[x,x,x,x,x,x],[x,-,g,-,-,x],[x,-,-,-,-,x],[x,-,-,-,1,x],[x,-,-,-,-,x],[x,-,-,-,-,x],[x,-,-,-,x,x],[x,x,x,x,x,x]],R) ; true.
+
 solvedPaths(Maze,R):-
   % Do bfSearch
   % bfSearch(From, To,BFSList),
