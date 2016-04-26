@@ -36,8 +36,9 @@ unSolvable([180,180,180]).
 unSolvable([c,c,c,c]).
 unSolvable([cc,cc,cc,cc]).
 
-fewestRotationsSingle(Maze,[180,180,180]):-
-  loadModule.
+fewestRotationsSingle(Maze,R):-
+  loadModule,
+  solvedPaths(Maze,R).
 
 
 
@@ -60,17 +61,12 @@ fewestRotationsSingle(Maze,[180,180,180]):-
     ).
 
 
-
-
-
-
-
 solvedPaths(Maze,R):-
   % Do bfSearch
-  bfSearch(From, To,BFSList),
-
+  % bfSearch(From, To,BFSList),
+  findall(Paths,bfSearch(From,To,Paths),AllPaths),
   % Find all palths
-  processBFSLists(Maze,BFSList,R).
+  processBFSLists(Maze,AllPaths,R).
 
 
   % findall(
@@ -82,13 +78,6 @@ solvedPaths(Maze,R):-
 
   % Collect list of possible solved mazes
 
-
-
-
-
-
-
-  % Move all players in a list of lists
   % movePlayers([],[]).
   % movePlayers([Row|Rows],R):-
   %   movePlayerInRow(Row,NewR),
@@ -100,28 +89,19 @@ solvedPaths(Maze,R):-
 
 
 
+processBFSLists(_,[],[]).
+processBFSLists(Maze,[Rlist|Rlists],R):-
+  (
+    solvable(Maze,Rlist)
+    ->
+      % writeln(blah),
+      R = [Rlist|R2],
+      processBFSLists(Maze,Rlists,R2)
+    ;
+      processBFSLists(Maze,Rlists,R)
+  ).
 
-% processBFSLists(_,[],_).
-% processBFSLists(Maze,[Rlist|Rlists],R):-
-%   solvable(Maze,Rlist),
-%   List = [Rlist],
-%   processBFSLists(Maze,Rlists,NewLists),
-%   append(List,NewLists,R),
-%   !.
-  % processBFSLists(_,[Rlist|Rlists],Rlists).
-% processBFSLists(_,[Rlist|Rlists],Rlists).
 
-% processBFSLists(_,[],[]).
-% processBFSLists(Maze,[Rlist|Rlists],R):-
-%   % solveable?
-%   solvable(Maze,Rlist),
-%   %Process rest of list
-%   processBFSLists(Maze,Rlists,R2),
-%   append([Rlist],[R2],R).
-% processBFSLists(Maze,[_|Rlists],R):-
-%   processBFSLists(Maze,Rlists,R).
-
-% does too many nested lists
 % processBFSLists(_,[],[]).
 % processBFSLists(Maze,[Rlist|Rlists],R):-
 %   % solveable?
@@ -131,20 +111,7 @@ solvedPaths(Maze,R):-
 %
 % processBFSLists(Maze,[Rlist|Rlists],R):-
 %   processBFSLists(Maze,Rlists,R2),
-%   append([Rlist],[R2],R).
-
-
-
-processBFSLists(_,[],[]).
-processBFSLists(Maze,[Rlist|Rlists],R):-
-  % solveable?
-  not(solvable(Maze,Rlist)),
-  %Process rest of list
-  processBFSLists(Maze,Rlists,R),!.
-
-processBFSLists(Maze,[Rlist|Rlists],R):-
-  processBFSLists(Maze,Rlists,R2),
-  append([Rlist],R2,R).
+%   append(Rlist,R2,R).
 
 
 

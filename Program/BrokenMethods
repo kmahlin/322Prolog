@@ -2,6 +2,59 @@
 
 
 
+
+  % Move all players in a list of lists
+  % movePlayers([],[]).
+  % movePlayers([Row|Rows],R):-
+  %   movePlayerInRow(Row,NewR),
+  %   List = [NewR],
+  %   movePlayers(Rows,NewRs),
+  %   append(List,NewRs,R),
+  %   !.
+  % movePlayers(R,R).
+
+
+
+
+% processBFSLists(_,[],_).
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   solvable(Maze,Rlist),
+%   List = [Rlist],
+%   processBFSLists(Maze,Rlists,NewLists),
+%   append(List,NewLists,R),
+%   !.
+  % processBFSLists(_,[Rlist|Rlists],Rlists).
+% processBFSLists(_,[Rlist|Rlists],Rlists).
+
+% processBFSLists(_,[],[]).
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   % solveable?
+%   solvable(Maze,Rlist),
+%   %Process rest of list
+%   processBFSLists(Maze,Rlists,R2),
+%   append([Rlist],[R2],R).
+% processBFSLists(Maze,[_|Rlists],R):-
+%   processBFSLists(Maze,Rlists,R).
+
+% does too many nested lists
+% processBFSLists(_,[],[]).
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   % solveable?
+%   not(solvable(Maze,Rlist)),
+%   %Process rest of list
+%   processBFSLists(Maze,Rlists,R),!.
+%
+% processBFSLists(Maze,[Rlist|Rlists],R):-
+%   processBFSLists(Maze,Rlists,R2),
+%   append([Rlist],[R2],R).
+
+
+
+
+
+
+
+
 %Not broken, just storing here
 
 % % bfSearch(From,To,Path).  <- use this to call it
