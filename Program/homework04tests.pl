@@ -25,12 +25,23 @@ part01:-
     rotationsAndPlayers(Rotations,Maze).
 
 part02:-
-    readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part02test01.g',_,Maze),
+    % readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part02test01.g',_,Maze),
+    readGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run2/02/part02test03.g',_,Maze),
     writeln(maze),
     printMazeGame(Maze),
     setof(Moves,fewestRotationsSingle(Maze,Moves),Paths),
     writeln(paths),
     printPaths(Paths).
+
+
+  part022:-
+      % readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part02test01.g',_,Maze),
+      readGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run2/02/part02test17.g',_,Maze),
+      writeln(maze),
+      printMazeGame(Maze),
+      setof(Moves,fewestRotationsSingle(Maze,Moves),Paths),
+      writeln(paths),
+      printPaths(Paths).
 
 part03:-
     readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part03test01.g',_,Maze),

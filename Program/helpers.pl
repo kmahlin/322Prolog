@@ -35,6 +35,7 @@ printMazeGame([Row|Rows]):-
 
 endOfFile(end_of_file).
 
+
 edge(c,c).
 edge(c,cc).
 edge(c,180).
@@ -113,6 +114,7 @@ removeEndOfFile(Maze,Maze).
 
 % NOTE: collect all sol for bfsearch
 % findall(Path,bfSearch(From,To,Path),X) ; true.
+% findall(Path,helpers:bfSearch(From,To,Path),X) ; true.
 
 % bfSearch(From,To,Path).  <- use this to call it
 % Searches for a list of possible rotations
@@ -131,21 +133,83 @@ bfSearch(From,To,[From|Result]):-
 
 
 shortestSolvedPaths(Maze,R):-
-	solvedPaths(Maze,[Path|Paths]),
-	length(Path,ShortestPathLenght),
-	findAllPathsOfLength([Path|Paths],ShortestPathLenght,R).
+	solvedPaths(Maze,Paths),
+  shortestPaths(Paths,R).
 
 
+shortestPaths([Path|Paths],R):-
+	length(Path,ShortestPathLength),
+	findAllPathsOfLength(ShortestPathLength,[Path|Paths],R).
+
+
+% shortestPaths([Path|Paths],R):-
+% 	length(Path,ShortestPathLength),
+% 	findAllPathsOfLength(ShortestPathLength,[Path|Paths],ShortestPaths),
+% 	write(ShortestPaths),
+% 	removeEmptyList(ShortestPaths,R).
+
+
+% loadHelpers.
+% helpers:findAllPathsOfLength(4,[[c,cc,c,c],[cc,c,c,cc],[180,180,c,c]],R).
 % sort through all solved paths and find the all of length len
-findAllPathsOfLength([],_,_).
-findAllPathsOfLength([Path|Paths],Len,R):-
+findAllPathsOfLength(_,[],[]).
+findAllPathsOfLength(Len,[Path|Paths],R):-
 	length(Path,PathLength),
 	PathLength == Len,
-	R = Path,
-	findAllPathsOfLength(Paths,Len,R),!.
+	% R = Path,
+	findAllPathsOfLength(Len,Paths,R2),
+	append([Path],R2,R).
+	% R = Path.
 
-findAllPathsOfLength([_|Paths],Len,R):-
-	findAllPathsOfLength(Paths,Len,R).
+findAllPathsOfLength(Len,[_|Paths],R):-
+	findAllPathsOfLength(Len,Paths,R),
+	!.
+
+
+
+
+% helpers:removeEmptyList([[],[1,2],[3,4,4]],R).
+% removeEmptyList([],[]).
+% removeEmptyList([[]|Paths],R):-
+% 	removeEmptyList(Paths,R),
+% 	!.
+% removeEmptyList([Path|Paths],R):-
+% 	removeEmptyList(Paths,R2),
+% 	append([Path],R2,R).
+
+
+
+
+
+
+
+
+% findAllPathsOfLength([],_,[]).
+% findAllPathsOfLength([Path|Paths],Len,R):-
+% 	length(Path,PathLength),
+% 	(
+% 		PathLength == Len
+%     ->
+% 			findAllPathsOfLength(Paths,Len,R2),
+% 			R = R2
+%     ;
+%       findAllPathsOfLength(Paths,Len,R)
+%   ).
+
+
+
+
+
+% findAllPathsOfLength([],_,_).
+% findAllPathsOfLength([Path|Paths],Len,R):-
+% 	length(Path,PathLength),
+% 	PathLength == Len,
+% 	findAllPathsOfLength(Paths,Len,R),
+% 	R = Path.
+%
+% findAllPathsOfLength([_|Paths],Len,R):-
+% 	findAllPathsOfLength(Paths,Len,R),
+% 	!.
 
 
 % get all paths from BFS serach, and return a list of
@@ -154,8 +218,17 @@ solvedPaths(Maze,R):-
   % Do bfSearch
   % bfSearch(From, To,BFSList),
   findall(Paths,bfSearch(From,To,Paths),AllPaths),
+	% add [c],[cc],[180] as possible paths - bandaid, I know =/
+  addPaths(AllPaths,AllPathsMod),
   % Find all palths
-  processBFSLists(Maze,AllPaths,R).
+  processBFSLists(Maze,AllPathsMod,R).
+
+
+addPaths(Paths,R):-
+	append([[180]],Paths,R1),
+	append([[cc]],R1,R2),
+	append([[c]],R2,R).
+
 
 
 % Process each path to see if it solves the maze
