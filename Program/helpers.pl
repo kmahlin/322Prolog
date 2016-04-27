@@ -154,8 +154,16 @@ solvedPaths(Maze,R):-
   % Do bfSearch
   % bfSearch(From, To,BFSList),
   findall(Paths,bfSearch(From,To,Paths),AllPaths),
+	% add [c],[cc],[180] as possible paths - bandaid, I know =/
+  addPaths(AllPaths,AllPathsMod),
   % Find all palths
-  processBFSLists(Maze,AllPaths,R).
+  processBFSLists(Maze,AllPathsMod,R).
+
+
+addPaths(Paths,R):-
+	append([[180]],Paths,R1),
+	append([[cc]],R1,R2),
+	append([[c]],R2,R).
 
 
 % Process each path to see if it solves the maze
@@ -184,6 +192,7 @@ solvable(Maze,RList):-
   processRotationList(Maze,RList,RMaze),
   % Check for goal
   not(goalExists(RMaze)).
+
 
 
 % use up rotation list
