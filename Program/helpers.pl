@@ -1,4 +1,6 @@
-:- module( helpers,
+:- dynamic paths/2,
+
+	module( helpers,
 	 [ readGravityMazeFile/3
 	 , printMazeGame/1
 
@@ -8,11 +10,13 @@
 	 , loadModule/0
 	 , removeEndOfFile/2
 	 , solvedPaths/2
-	 ,shortestSolvedPaths/2
+	 , shortestSolvedPaths/2
+
 
 	 ,isStacked/2
 	 ]
     ).
+
 
 readGravityMazeFile(File,Moves,Maze):-
     open(File,read,Input),
@@ -34,6 +38,9 @@ printMazeGame([Row|Rows]):-
     printMazeGame(Rows).
 
 endOfFile(end_of_file).
+
+ paths([180,180,180],false).
+
 
 edge(c,c).
 edge(c,cc).
@@ -93,8 +100,6 @@ countPlayersInList([_|TA],R):-
   R is R2 + 1.
 
 
-
-
 % part 02 03 predicates
 
 loadModule:-
@@ -113,6 +118,7 @@ removeEndOfFile(Maze,Maze).
 
 % NOTE: collect all sol for bfsearch
 % findall(Path,bfSearch(From,To,Path),X) ; true.
+% findall(Path,helpers:bfSearch(From,To,Path),X) ; true.
 
 % bfSearch(From,To,Path).  <- use this to call it
 % Searches for a list of possible rotations
@@ -131,21 +137,30 @@ bfSearch(From,To,[From|Result]):-
 
 
 shortestSolvedPaths(Maze,R):-
-	solvedPaths(Maze,[Path|Paths]),
-	length(Path,ShortestPathLenght),
-	findAllPathsOfLength([Path|Paths],ShortestPathLenght,R).
+	solvedPaths(Maze,Paths),
+  shortestPaths(Paths,R).
 
 
+shortestPaths([Path|Paths],R):-
+	length(Path,ShortestPathLength),
+	findAllPathsOfLength(ShortestPathLength,[Path|Paths]).
+
+
+% loadHelpers.
+% helpers:findAllPathsOfLength(4,[[c,cc,c,c],[cc,c,c,cc],[180,180,c,c]],R).
 % sort through all solved paths and find the all of length len
-findAllPathsOfLength([],_,_).
-findAllPathsOfLength([Path|Paths],Len,R):-
+
+findAllPathsOfLength(_,[]).
+findAllPathsOfLength(Len,[Path|Paths]):-
 	length(Path,PathLength),
 	PathLength == Len,
-	R = Path,
-	findAllPathsOfLength(Paths,Len,R),!.
+	findAllPathsOfLength(Len,Paths),
+	 asserta(paths(Path,true)).
 
-findAllPathsOfLength([_|Paths],Len,R):-
-	findAllPathsOfLength(Paths,Len,R).
+findAllPathsOfLength(Len,[_|Paths]):-
+	findAllPathsOfLength(Len,Paths),
+	!.
+
 
 
 % get all paths from BFS serach, and return a list of
@@ -164,6 +179,7 @@ addPaths(Paths,R):-
 	append([[180]],Paths,R1),
 	append([[cc]],R1,R2),
 	append([[c]],R2,R).
+
 
 
 % Process each path to see if it solves the maze
