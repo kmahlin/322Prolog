@@ -42,7 +42,8 @@ part03:-
 
 
 part04:-
-    readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part04test01.g',[Rotation|_],Maze),
+    % readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part04test01.g',[Rotation|_],Maze),
+    readGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run2/04/part04test09.g',[Rotation|_],Maze),
     writeln(rotation),
     writeln(Rotation),
     writeln(maze),

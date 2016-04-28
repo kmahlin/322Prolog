@@ -1,3 +1,3 @@
 notStacked(Maze,Move):-
   loadModule,
-  isStacked(Maze,Move).
+  not(isStacked(Maze,Move)).

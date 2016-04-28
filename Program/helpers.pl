@@ -303,7 +303,8 @@ rotateOneEighty(Maze,R):-
 isStacked(Maze,RotationList):-
 	% do all rotations in move
 	processRotationList(Maze,RotationList,RMaze),
-	stackExists(R).
+	printMazeGame(RMaze),
+	stackExists(RMaze).
 
 
 
