@@ -210,6 +210,7 @@ solvable(Maze,RList):-
   not(goalExists(RMaze)).
 
 
+
 % use up rotation list
 % return the rotated maze
 processRotationList(Maze,[Hr|Tr], R):-
