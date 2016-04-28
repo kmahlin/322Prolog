@@ -44,7 +44,8 @@ part02:-
       printPaths(Paths).
 
 part03:-
-    readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part03test01.g',_,Maze),
+    % readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part03test01.g',_,Maze),
+    eadGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run 7/04/part04test03.g',_,Maze),
     writeln(maze),
     printMazeGame(Maze),
     setof(Moves,fewestRotationsMultiple(Maze,Moves),Paths),
@@ -54,7 +55,7 @@ part03:-
 
 part04:-
     % readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part04test01.g',[Rotation|_],Maze),
-    readGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run 6/04/part04test30.g',[Rotation|_],Maze),
+    readGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run 8/04/part04test03.g',[Rotation|_],Maze),
     writeln(rotation),
     writeln(Rotation),
     writeln(maze),
