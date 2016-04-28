@@ -1,4 +1,6 @@
-:- module( helpers,
+:- dynamic paths/2,
+
+	module( helpers,
 	 [ readGravityMazeFile/3
 	 , printMazeGame/1
 
@@ -8,11 +10,13 @@
 	 , loadModule/0
 	 , removeEndOfFile/2
 	 , solvedPaths/2
-	 ,shortestSolvedPaths/2
+	 , shortestSolvedPaths/2
+
 
 	 ,isStacked/2
 	 ]
     ).
+
 
 readGravityMazeFile(File,Moves,Maze):-
     open(File,read,Input),
@@ -34,6 +38,8 @@ printMazeGame([Row|Rows]):-
     printMazeGame(Rows).
 
 endOfFile(end_of_file).
+
+ paths([180,180,180],false).
 
 
 edge(c,c).
@@ -94,8 +100,6 @@ countPlayersInList([_|TA],R):-
   R is R2 + 1.
 
 
-
-
 % part 02 03 predicates
 
 loadModule:-
@@ -139,76 +143,24 @@ shortestSolvedPaths(Maze,R):-
 
 shortestPaths([Path|Paths],R):-
 	length(Path,ShortestPathLength),
-	findAllPathsOfLength(ShortestPathLength,[Path|Paths],R).
-
-
-% shortestPaths([Path|Paths],R):-
-% 	length(Path,ShortestPathLength),
-% 	findAllPathsOfLength(ShortestPathLength,[Path|Paths],ShortestPaths),
-% 	write(ShortestPaths),
-% 	removeEmptyList(ShortestPaths,R).
+	findAllPathsOfLength(ShortestPathLength,[Path|Paths]).
 
 
 % loadHelpers.
 % helpers:findAllPathsOfLength(4,[[c,cc,c,c],[cc,c,c,cc],[180,180,c,c]],R).
 % sort through all solved paths and find the all of length len
 
-findAllPathsOfLength(_,[],[]).
-findAllPathsOfLength(Len,[Path|Paths],R):-
+findAllPathsOfLength(_,[]).
+findAllPathsOfLength(Len,[Path|Paths]):-
 	length(Path,PathLength),
 	PathLength == Len,
-	findAllPathsOfLength(Len,Paths,R2),
-	R = Path.
+	findAllPathsOfLength(Len,Paths),
+	 asserta(paths(Path,true)).
 
-findAllPathsOfLength(Len,[_|Paths],R):-
-	findAllPathsOfLength(Len,Paths,R),
+findAllPathsOfLength(Len,[_|Paths]):-
+	findAllPathsOfLength(Len,Paths),
 	!.
 
-
-
-
-% helpers:removeEmptyList([[],[1,2],[3,4,4]],R).
-% removeEmptyList([],[]).
-% removeEmptyList([[]|Paths],R):-
-% 	removeEmptyList(Paths,R),
-% 	!.
-% removeEmptyList([Path|Paths],R):-
-% 	removeEmptyList(Paths,R2),
-% 	append([Path],R2,R).
-
-
-
-
-
-
-
-
-% findAllPathsOfLength([],_,[]).
-% findAllPathsOfLength([Path|Paths],Len,R):-
-% 	length(Path,PathLength),
-% 	(
-% 		PathLength == Len
-%     ->
-% 			findAllPathsOfLength(Paths,Len,R2),
-% 			R = R2
-%     ;
-%       findAllPathsOfLength(Paths,Len,R)
-%   ).
-
-
-
-
-
-% findAllPathsOfLength([],_,_).
-% findAllPathsOfLength([Path|Paths],Len,R):-
-% 	length(Path,PathLength),
-% 	PathLength == Len,
-% 	findAllPathsOfLength(Paths,Len,R),
-% 	R = Path.
-%
-% findAllPathsOfLength([_|Paths],Len,R):-
-% 	findAllPathsOfLength(Paths,Len,R),
-% 	!.
 
 
 % get all paths from BFS serach, and return a list of
