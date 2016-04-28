@@ -1,3 +1,4 @@
 notStacked(Maze,Move):-
   loadModule,
-  not(isStacked(Maze,Move)).
+  removeEndOfFile(Maze,ModMaze),
+  not(isStacked(ModMaze,Move)).
