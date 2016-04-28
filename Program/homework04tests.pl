@@ -1,3 +1,7 @@
+% To run this code, use this:
+% working_directory(CWD,'c:/users/kevin/documents/github/322Prolog/Program').
+% [homework04tests].
+
 printPaths([]).
 printPaths([Path|Paths]):-
     writeln(Path),

@@ -38,12 +38,14 @@ printMazeGame([Row|Rows]):-
     writeln(Row),
     printMazeGame(Rows).
 
+
+% does end of file exist in the maze variable
 endOfFile(end_of_file).
 
+% solved paths
 paths([180,180,180],false).
 
-
-
+% all edges for BFsearch
 edge(c,c).
 edge(c,cc).
 edge(c,180).
@@ -56,24 +58,30 @@ edge(180,c).
 edge(180,cc).
 edge(180,180).
 
+% a value that a player can move into
 forward(-).
 
+% goal value in maze
 goal(g).
 
+% at the start of game, no players are in goal
 inGoal(1,false).
 inGoal(2,false).
 inGoal(3,false).
 inGoal(4,false).
 
+% possible players in game
 player(1).
 player(2).
 player(3).
 player(4).
 
+% all possible moves
 move(c).
 move(cc).
 move(180).
 
+% Known unSolvable paths
 unSolvable([180,180,180]).
 unSolvable([180,180,180,180]).
 unSolvable([180,180,180,180,180]).
@@ -181,7 +189,8 @@ solvedPaths(Maze,R):-
   % Find all palths
   processBFSLists(Maze,AllPathsMod,R).
 
-
+% bandaid fix, for some reason these aren't in the
+% bfs searched paths
 addPaths(Paths,R):-
 	append([[180]],Paths,R1),
 	append([[cc]],R1,R2),

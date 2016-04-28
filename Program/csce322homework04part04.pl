@@ -1,3 +1,4 @@
+
 notStacked(Maze,Move):-
   loadModule,
   removeEndOfFile(Maze,ModMaze),
