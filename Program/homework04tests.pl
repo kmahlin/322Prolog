@@ -45,7 +45,7 @@ part02:-
 
 part03:-
     % readGravityMazeFile('c:/users/kevin/documents/github/322Prolog/Test/part03test01.g',_,Maze),
-    eadGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run 7/04/part04test03.g',_,Maze),
+    readGravityMazeFile('C:/Users/Kevin/Desktop/Prolog Webgrader Runs/Run 7/03/part03test02.g',_,Maze),
     writeln(maze),
     printMazeGame(Maze),
     setof(Moves,fewestRotationsMultiple(Maze,Moves),Paths),

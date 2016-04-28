@@ -214,9 +214,13 @@ solvable(Maze,RList):-
   %Process Rotation list
   processRotationList(Maze,RList,RMaze),
   % Check for goal
-  not(goalExists(RMaze)).
+  not(goalExists(RMaze)),
+	resetPlayerInGoal.
 
-
+resetPlayerInGoal:-
+	inGoal(Player,true),
+	retract(inGoal(Player,true)),
+	asserta(inGoal(Player,false)).
 
 % use up rotation list
 % return the rotated maze
@@ -328,7 +332,6 @@ rotateOneEighty(Maze,R):-
 % % also uses part 02/3 predicates for rotation and Moves
 isStacked(Maze,Rotation):-
 	% do all rotations in move
-	writeln(Rotation),
 	processRotation(Maze,Rotation,RMaze),
 	rotateCounterClockWise(RMaze,CCMaze),
 	stackExists(CCMaze).
