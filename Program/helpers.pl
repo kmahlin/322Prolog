@@ -152,14 +152,13 @@ shortestPaths([Path|Paths],R):-
 % loadHelpers.
 % helpers:findAllPathsOfLength(4,[[c,cc,c,c],[cc,c,c,cc],[180,180,c,c]],R).
 % sort through all solved paths and find the all of length len
+
 findAllPathsOfLength(_,[],[]).
 findAllPathsOfLength(Len,[Path|Paths],R):-
 	length(Path,PathLength),
 	PathLength == Len,
-	% R = Path,
 	findAllPathsOfLength(Len,Paths,R2),
-	append([Path],R2,R).
-	% R = Path.
+	R = Path.
 
 findAllPathsOfLength(Len,[_|Paths],R):-
 	findAllPathsOfLength(Len,Paths,R),
