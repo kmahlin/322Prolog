@@ -1,4 +1,5 @@
 :- dynamic paths/2,
+  inGoal/2,
 
 	module( helpers,
 	 [ readGravityMazeFile/3
@@ -39,7 +40,8 @@ printMazeGame([Row|Rows]):-
 
 endOfFile(end_of_file).
 
- paths([180,180,180],false).
+paths([180,180,180],false).
+
 
 
 edge(c,c).
@@ -57,6 +59,11 @@ edge(180,180).
 forward(-).
 
 goal(g).
+
+inGoal(1,false).
+inGoal(2,false).
+inGoal(3,false).
+inGoal(4,false).
 
 player(1).
 player(2).
@@ -276,9 +283,12 @@ movePlayerInRow(Row,Row).
 swapHeadMiddle([He,Mi|R],[-,He|R]):-
     player(He),
     goal(Mi),
+		asserta(inGoal(He,true)),
+		retract(inGoal(He,false)),
     !.
 swapHeadMiddle([He,Mi|R],[Mi,He|R]):-
     player(He),
+		not(inGoal(He,true)),
     forward(Mi),
     !.
 swapHeadMiddle([He|R],[He|R1]):-
@@ -316,17 +326,18 @@ rotateOneEighty(Maze,R):-
 
 % % part 04 specific predicates
 % % also uses part 02/3 predicates for rotation and Moves
-isStacked(Maze,RotationList):-
+isStacked(Maze,Rotation):-
 	% do all rotations in move
-	processRotationList(Maze,RotationList,RMaze),
-	stackExists(RMaze).
+	writeln(Rotation),
+	processRotation(Maze,Rotation,RMaze),
+	rotateCounterClockWise(RMaze,CCMaze),
+	stackExists(CCMaze).
 
 
 
 %Check if a stack of players exist in the maze
 stackExists(Maze):-
-	rotateCounterClockWise(Maze,CCMaze),
-	flatten(CCMaze,FlatMaze),
+	flatten(Maze,FlatMaze),
   stackedCheck(FlatMaze).
 
 stackedCheck([He,Mi|_]):-
