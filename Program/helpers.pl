@@ -303,6 +303,7 @@ rotateOneEighty(Maze,R):-
 isStacked(Maze,RotationList):-
 	% do all rotations in move
 	processRotationList(Maze,RotationList,RMaze),
+
 	printMazeGame(RMaze),
 	stackExists(RMaze).
 
@@ -310,7 +311,8 @@ isStacked(Maze,RotationList):-
 
 %Check if a stack of players exist in the maze
 stackExists(Maze):-
-	flatten(Maze,FlatMaze),
+	rotateCounterClockWise(Maze,CCMaze),
+	flatten(CCMaze,FlatMaze),
   stackedCheck(FlatMaze).
 
 stackedCheck([He,Mi|_]):-
